@@ -1,10 +1,8 @@
-# IndexTTS For Chaos - 便携式分发包
+# IndexTTS For Windows - 便携式分发包
 
 > 零样本情感语音合成 | Zero-Shot Emotional Text-to-Speech
 >
 > 基于 [IndexTTS](https://github.com/index-tts/index-tts) 项目构建的独立桌面应用
->
-> 通过 Chaos应用 模块化IndexTTS扩展，将功能与主程序分离，实现独立分发与部署
 
 ---
 
@@ -33,7 +31,7 @@
 ## 目录结构
 
 ```
-IndexTTS_For_Chaos/
+IndexTTS_For_Windows/
 ├── run.bat                      启动脚本（双击运行）
 ├── desktop_launcher.py          启动器入口
 ├── indextts_engine.py           推理引擎封装
