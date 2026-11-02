@@ -25,3 +25,4 @@ __pycache__/
 /docs/github_publish.json
 /build/
 /docs/release_publish.json
+/tools/bootstrap/uv.exe

@@ -9,9 +9,12 @@ set PYTHONPATH=
 set PYTHONHOME=
 set "PATH=%CD%\even;%CD%\even\Library\bin;%CD%\even\Scripts;%PATH%"
 if not exist "even\python.exe" (
-    echo [错误] 缺少项目内 even\python.exe，请恢复项目运行环境。
-    pause
-    exit /b 1
+    call :setup_environment
+    if errorlevel 1 exit /b 1
+)
+if exist "even\.indextts_setup_pending" (
+    call :setup_environment
+    if errorlevel 1 exit /b 1
 )
 "even\python.exe" -X utf8 -I -B "start.py" %*
 set "INDEXTTS_EXIT=%ERRORLEVEL%"
@@ -20,3 +23,12 @@ if not "%INDEXTTS_EXIT%"=="0" (
     pause
 )
 exit /b %INDEXTTS_EXIT%
+
+:setup_environment
+powershell.exe -NoProfile -ExecutionPolicy Bypass -File "tools\setup_environment.ps1"
+if errorlevel 1 (
+    echo [错误] 项目内环境安装未完成，请检查网络及上述错误后重试。
+    pause
+    exit /b 1
+)
+exit /b 0

@@ -103,13 +103,19 @@ def upload_asset(session, release, path):
 def main():
     parser = argparse.ArgumentParser()
     parser.add_argument("--commit", required=True, help="已推送并打上 v1.2.0 标签的提交")
+    parser.add_argument("--lightweight", action="store_true", help="发布用户选择的首次启动安装 even/ 的轻量包")
     args = parser.parse_args()
-    verification = json.loads((OUTPUT / "verification.json").read_text(encoding="utf-8"))
+    output = Path("build/release_v1.2.0_light") if args.lightweight else OUTPUT
+    verification = json.loads((output / "verification.json").read_text(encoding="utf-8"))
     assert verification["crc_passed"] and verification["models_excluded_verified"]
-    assert verification["relocation_smoke"]["four_ui_modes"] and verification["missing_models_reported"]
-    assert verification["pip_check"] == "No broken requirements found."
-    manifest = json.loads((OUTPUT / "release_manifest.json").read_text(encoding="utf-8"))
-    archives = [OUTPUT / item["name"] for item in manifest["archives"]]
+    if args.lightweight:
+        assert verification["bootstrap_python_installed"] and verification["dependencies_resolved"]
+        assert verification["regression_tests_passed"] == 16
+    else:
+        assert verification["relocation_smoke"]["four_ui_modes"] and verification["missing_models_reported"]
+        assert verification["pip_check"] == "No broken requirements found."
+    manifest = json.loads((output / "release_manifest.json").read_text(encoding="utf-8"))
+    archives = [output / item["name"] for item in manifest["archives"]]
     assert all(path.stat().st_size < 2 * 1024**3 for path in archives)
     session = get_session()
     reference = api(session, "GET", "git/ref/tags/" + TAG)
@@ -128,9 +134,9 @@ def main():
     payload = {"tag_name": TAG, "target_commitish": args.commit, "name": "v1.2.0 · Windows 深色工作台（不含模型）",
                "body": body, "draft": True, "prerelease": False}
     release = api(session, "PATCH", f"releases/{release['id']}", payload) if release else api(session, "POST", "releases", payload)
-    (OUTPUT / "draft_state.json").write_text(json.dumps({"release_id": release["id"], "tag": TAG}, indent=2), encoding="utf-8")
+    (output / "draft_state.json").write_text(json.dumps({"release_id": release["id"], "tag": TAG}, indent=2), encoding="utf-8")
     print(f"Release 草稿已准备：id={release['id']} / {TAG}", flush=True)
-    attachments = [*archives, OUTPUT / "SHA256SUMS.txt", OUTPUT / "release_manifest.json", Path("docs/RELEASE_v1.2.0.md")]
+    attachments = [*archives, output / "SHA256SUMS.txt", output / "release_manifest.json", Path("docs/RELEASE_v1.2.0.md")]
     # 两个环境附件互不依赖，可并行上传；程序和说明先上传，便于独立核对。
     small = [path for path in attachments if path.stat().st_size < 100 * 1024**2]
     large = [path for path in attachments if path not in small]

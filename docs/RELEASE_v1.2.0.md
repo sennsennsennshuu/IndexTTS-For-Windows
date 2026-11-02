@@ -1,16 +1,12 @@
 # IndexTTS For Windows v1.2.0
 
-本版提供深色蓝灰色语音创作工作台及项目内 Python 运行环境，**不包含任何模型权重**。
+本版提供深色蓝灰色语音创作工作台及首次启动环境安装器，**不包含任何模型权重，也不预装完整运行环境**。首次运行会联网将 Python 和依赖安装到项目内 `even/`。
 
 ## 下载与使用
 
-完整下载以下三个 ZIP，依次解压到**同一个目录**，合并同名的 `IndexTTS-For-Windows` 文件夹：
+下载 `IndexTTS-For-Windows-v1.2.0-win64-no-models.zip` 并完整解压。双击 `run.bat`，首次运行会自动下载 Python 3.11 并安装依赖到项目内 `even/`；无需提前安装 Python 或 Conda。普通依赖优先使用清华镜像，失败时切换阿里云，CUDA wheel 从 PyTorch 源获取。
 
-- `IndexTTS-For-Windows-v1.2.0-program-no-models.zip`：程序、源码、许可证与说明。
-- `IndexTTS-For-Windows-v1.2.0-runtime-01.zip`：项目内 Python/CUDA 运行环境第一部分。
-- `IndexTTS-For-Windows-v1.2.0-runtime-02.zip`：项目内 Python/CUDA 运行环境第二部分。
-
-三个都是独立的标准 ZIP，可用 Windows 自带解压功能解压，无需分卷合并。解压后项目内应有 `even/python.exe`；无需激活或安装外部 Conda 环境。
+首次安装需要网络和足够磁盘空间，CUDA 依赖下载量较大。下载缓存位于项目内 `cache/`；中断后重新运行 `run.bat` 可以重试。已经准备好完整 `even/` 的项目会直接启动。
 
 按 `docs/MODEL_SETUP.md` 将自行准备的模型放入项目内 `models/IndexTTS-2/`，然后双击 `run.bat`。仅解压程序包、尚未放入模型时，启动检查会明确列出缺少的文件。
 
@@ -20,7 +16,7 @@
 .\run.bat --check
 ```
 
-`SHA256SUMS.txt` 提供三个 ZIP 的 SHA-256，可用于检查下载是否完整。GitHub 自动生成的 Source code 附件只含源码，**不含 `even/` 环境**；需要直接解压使用时，请下载上述三个程序与运行环境 ZIP。
+`SHA256SUMS.txt` 提供 ZIP 的 SHA-256，可用于检查下载是否完整。GitHub 自动生成的 Source code 附件只含源码；推荐下载上述带环境安装器的 win64 程序包。
 
 ## 本次更新
 
@@ -34,9 +30,9 @@
 
 ## 发行包范围
 
-包含应用、上游推理源码及许可证、CPython 3.11.15、PyTorch/torchaudio 2.8.0+cu129、PyQt6 和其余运行依赖。
+包含应用、上游推理源码及许可证、环境安装脚本、uv 引导工具和依赖版本清单。首次启动安装 Python 3.11、PyTorch/torchaudio 2.8.0+cu129、PyQt6 和其余依赖。
 
-不包含主模型、情感模型、辅助推理权重、原项目中的 JDC 权重、用户音频、测试录音、输出音频、缓存或运行日志。也不包含编译静态库和开发头文件；普通 CUDA 推理继续可用。
+不包含预装环境、主模型、情感模型、辅助推理权重、原项目中的 JDC 权重、用户音频、测试录音、输出音频、缓存或运行日志。
 
 ## 系统与模型要求
 

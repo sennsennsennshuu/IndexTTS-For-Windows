@@ -15,14 +15,16 @@ from tools.build_release import PREFIX, VERSION, OUTPUT, WEIGHT_SUFFIXES
 def main():
     parser = argparse.ArgumentParser()
     parser.add_argument("--extract-smoke", action="store_true", help="完整解压到项目 build/，运行依赖与窗口冒烟检查")
+    parser.add_argument("--lightweight", action="store_true", help="校验轻量包及首次启动环境安装器")
     args = parser.parse_args()
-    report = json.loads((OUTPUT / "release_manifest.json").read_text(encoding="utf-8"))
+    output = Path("build/release_v1.2.0_light") if args.lightweight else OUTPUT
+    report = json.loads((output / "release_manifest.json").read_text(encoding="utf-8"))
     names = []
-    target = Path("build/release_validation")
+    target = Path("build/light_release_validation") if args.lightweight else Path("build/release_validation")
     if args.extract_smoke and (target / PREFIX).exists():
         raise RuntimeError("解压验收目录已存在，请先明确清理后重试")
     for artifact in report["archives"]:
-        archive = OUTPUT / artifact["name"]
+        archive = output / artifact["name"]
         checksum = hashlib.sha256()
         with archive.open("rb") as stream:
             for chunk in iter(lambda: stream.read(8 * 1024 * 1024), b""):
@@ -51,14 +53,37 @@ def main():
                 package.extractall(target)
     root_files = {Path(name).name for name in names if len(Path(name).parts) == 2 and not name.endswith("/")}
     assert root_files == {"run.bat", "start.py", "requirements.txt"}, root_files
-    assert f"{PREFIX}/even/python.exe" in names
-    assert f"{PREFIX}/even/Lib/site-packages/torch/lib/torch_cuda.dll" in names
-    assert f"{PREFIX}/even/Lib/site-packages/torch/testing/__init__.py" in names
+    if args.lightweight:
+        assert not any(name.startswith(f"{PREFIX}/even/") for name in names)
+        assert f"{PREFIX}/tools/bootstrap/uv.exe" in names
+        assert f"{PREFIX}/tools/setup_environment.ps1" in names
+        assert f"{PREFIX}/tools/bootstrap/LICENSE-MIT" in names
+    else:
+        assert f"{PREFIX}/even/python.exe" in names
+        assert f"{PREFIX}/even/Lib/site-packages/torch/lib/torch_cuda.dll" in names
+        assert f"{PREFIX}/even/Lib/site-packages/torch/testing/__init__.py" in names
     assert f"{PREFIX}/docs/MODEL_SETUP.md" in names
     report["crc_passed"] = True
     report["models_excluded_verified"] = True
     report["root_files"] = sorted(root_files)
-    if args.extract_smoke:
+    if args.extract_smoke and args.lightweight:
+        root = target / PREFIX
+        assert (root / "tools/bootstrap/uv.exe").is_file()
+        assert "setup_environment.ps1" in (root / "run.bat").read_text(encoding="utf-8")
+        assert ".indextts_setup_pending" in (root / "run.bat").read_text(encoding="utf-8")
+        runtime_probe = Path("build/light_setup_validation/even/python.exe")
+        result = subprocess.run([str(runtime_probe), "-X", "utf8", "-I", "-B", "-c", "import sys; print(sys.version.split()[0])"],
+                                capture_output=True, text=True, timeout=15)
+        assert result.returncode == 0 and result.stdout.startswith("3.11."), result.stderr
+        resolver_log = Path("logs/light_setup_validation.log").read_text(encoding="utf-8")
+        assert "完整依赖解析检查通过" in resolver_log
+        regression_log = Path("logs/release_regression.log").read_text(encoding="utf-8")
+        assert "Ran 16 tests" in regression_log and "\nOK\n" in regression_log
+        report["bootstrap_python_installed"] = True
+        report["bootstrap_python_version"] = result.stdout.strip()
+        report["dependencies_resolved"] = True
+        report["regression_tests_passed"] = 16
+    elif args.extract_smoke:
         root = Path("build/release_validation") / PREFIX
         python = root / "even/python.exe"
         environment = dict(os.environ, QT_QPA_PLATFORM="offscreen", PYTHONUTF8="1")
@@ -102,7 +127,7 @@ print(json.dumps({'python':sys.version.split()[0],'torch':torch.__version__,
                                    env=environment, text=True, capture_output=True, timeout=30)
         assert pip_check.returncode == 0, pip_check.stdout + pip_check.stderr
         report["pip_check"] = pip_check.stdout.strip()
-    (OUTPUT / "verification.json").write_text(json.dumps(report, ensure_ascii=False, indent=2), encoding="utf-8")
+    (output / "verification.json").write_text(json.dumps(report, ensure_ascii=False, indent=2), encoding="utf-8")
     print(json.dumps(report, ensure_ascii=False, indent=2), flush=True)
 
 

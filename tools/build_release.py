@@ -112,7 +112,11 @@ def split_archives(archive):
 def main():
     parser = argparse.ArgumentParser()
     parser.add_argument("--reuse-compressed", action="store_true", help="复用已完整生成的本地中间 ZIP，仅生成独立附件和清单")
+    parser.add_argument("--lightweight", action="store_true", help="只打包程序和项目内环境引导器，首次启动联网安装 even/")
     args = parser.parse_args()
+    if args.lightweight:
+        build_lightweight()
+        return
     OUTPUT.mkdir(parents=True, exist_ok=True)
     archive = OUTPUT / f"{PREFIX}-v{VERSION}-win64-no-models.zip"
     if archive.exists() and not args.reuse_compressed:
@@ -143,6 +147,30 @@ def main():
     (OUTPUT / "release_manifest.json").write_text(json.dumps(report, ensure_ascii=False, indent=2), encoding="utf-8")
     (OUTPUT / "SHA256SUMS.txt").write_text("".join(f"{item['sha256']}  {item['name']}\n" for item in report["archives"]), encoding="utf-8")
     print(json.dumps(report, ensure_ascii=False, indent=2), flush=True)
+
+
+def build_lightweight():
+    """轻量版保留可重复的环境安装入口，运行环境始终安装在项目目录内。"""
+    target = Path(f"build/release_v{VERSION}_light")
+    target.mkdir(parents=True, exist_ok=True)
+    archive = target / f"{PREFIX}-v{VERSION}-win64-no-models.zip"
+    if archive.exists():
+        raise RuntimeError("轻量发行包已存在，禁止直接覆盖已验证成品")
+    files = [path for path in collect_files() if path.parts[0] != "even"]
+    files.append(Path("tools/setup_environment.ps1"))
+    files.extend(path for path in Path("tools/bootstrap").rglob("*") if path.is_file())
+    with zipfile.ZipFile(archive, "w", compression=zipfile.ZIP_DEFLATED, compresslevel=9) as package:
+        for path in sorted(files):
+            package.write(path, f"{PREFIX}/{path.as_posix()}")
+        package.writestr(f"{PREFIX}/models/IndexTTS-2/", b"")
+    artifact = {"name": archive.name, "bytes": archive.stat().st_size, "sha256": sha256(archive)}
+    report = {"version": VERSION, "source_commit": subprocess.check_output(["git", "rev-parse", "HEAD"]).decode().strip(),
+              "file_count": len(files), "contains_models": False, "contains_python_runtime": False,
+              "first_launch_installs_even": True, "bootstrap_tool": "uv 0.11.21",
+              "bootstrap_sha256": sha256(Path("tools/bootstrap/uv.exe")), "archives": [artifact]}
+    (target / "release_manifest.json").write_text(json.dumps(report,ensure_ascii=False,indent=2),encoding="utf-8")
+    (target / "SHA256SUMS.txt").write_text(f"{artifact['sha256']}  {archive.name}\n",encoding="utf-8")
+    print(json.dumps(report,ensure_ascii=False,indent=2),flush=True)
 
 
 if __name__ == "__main__":

@@ -27,6 +27,10 @@ git config --local core.excludesFile docs/gitignore
 
 ## 启动
 
+GitHub Release 的 `v1.2.0` 提供不含模型的轻量 Windows 程序包。首次双击 `run.bat` 会联网下载 Python 3.11 并将依赖安装到项目内 `even/`，无需提前安装 Python 或 Conda；中断后可再次运行重试。已配好 `even/` 的本机项目仍直接启动。
+
+程序包和安装器不下载模型。模型放置路径见 `MODEL_SETUP.md`，本版详细说明见 `RELEASE_v1.2.0.md`。
+
 双击项目根目录的 `run.bat`，或者在项目目录打开 PowerShell：
 
 ```powershell
