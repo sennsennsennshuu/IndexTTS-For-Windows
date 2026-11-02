@@ -23,3 +23,5 @@ __pycache__/
 
 # 上传结束后的远端核对记录留在本地，避免记录提交自身哈希造成循环。
 /docs/github_publish.json
+/build/
+/docs/release_publish.json
