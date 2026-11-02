@@ -24,7 +24,14 @@
 ## GitHub 上传与覆盖
 
 - [x] 检查本地 Git 状态：当前项目尚未初始化仓库。
-- [x] 定位并确认目标 GitHub 仓库和默认分支：`sennsennsennshuu/IndexTTS-For-Chaos` / `main`。
+- [x] 定位并确认目标 GitHub 仓库和默认分支：`sennsennsennshuu/IndexTTS-For-Windows` / `main`。
 - [x] 整理上传内容、大文件处理和发布说明；运行环境、模型、缓存和日志保持本地。
 - [x] 创建提交并推送当前版本；保留已有提交历史。
 - [x] 校验远端提交和 248 个文件的 Git 对象哈希；根目录保持三个文件。
+
+## 仓库重命名
+
+- [x] 检查当前仓库与目标名称；目标名称为 `IndexTTS-For-Windows`。
+- [x] 重命名 GitHub 仓库并同步本地 origin。
+- [x] 更新文档与本地发布记录，提交并推送。
+- [x] 核对新名称、仓库身份、默认分支和远端提交。

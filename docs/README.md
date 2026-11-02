@@ -1,4 +1,4 @@
-# IndexTTS 独立桌面版
+# IndexTTS For Windows
 
 本项目从原桌面助手的 `file/extend/IndexTTS` 模块分离，保留原来的 PyQt6 语音合成窗口和 IndexTTS2 推理模型。模型、Python、运行依赖、缓存、日志和输出均放在本项目内，正常启动无需原桌面助手、全局 Conda 环境或联网下载。
 
