@@ -1,0 +1,50 @@
+{
+  "verified_at_beijing": "2026-11-02T21:00:04+08:00",
+  "style": "深色、少量蓝灰色、现代平面设计",
+  "root_files": [
+    "requirements.txt",
+    "run.bat",
+    "start.py"
+  ],
+  "runtime": "even/python.exe",
+  "regression_tests_passed": 16,
+  "regression_log": "logs/ui_full_regression.log",
+  "syntax_files_checked": 14,
+  "desktop": {
+    "visible": true,
+    "exit_code": 0,
+    "screenshot_saved": true,
+    "result_preview_saved": true,
+    "emotion_preview_saved": true,
+    "waveform_bins": 180,
+    "window_logical_size": [
+      1180,
+      820
+    ]
+  },
+  "previews": {
+    "default_native": "docs/desktop_window.png",
+    "result_native": "docs/desktop_result.png",
+    "emotion_native": "docs/desktop_emotion.png",
+    "compact": "docs/window_compact_preview.png"
+  },
+  "changed_program_files": [
+    "app/window.py",
+    "app/widgets.py",
+    "app/theme.py"
+  ],
+  "verified_interactions": [
+    "参考音频拖放与重置",
+    "四种情感模式互斥切换与参数传递",
+    "高级参数折叠",
+    "文本字数统计",
+    "后台生成成功与失败恢复",
+    "真实音频波形和播放定位",
+    "滑杆鼠标点击、键盘微调及四种模式绘制",
+    "任务完成时的线程清理与延迟关闭"
+  ],
+  "model_files_modified": false,
+  "dependencies_added": [],
+  "preview_audio": "outputs/独立项目验收_模式0.wav",
+  "preview_audio_origin": "上一轮真实合成验收输出，本轮复用该文件检查播放器和真实波形"
+}

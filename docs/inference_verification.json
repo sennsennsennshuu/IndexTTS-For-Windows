@@ -1,0 +1,55 @@
+{
+  "offline": true,
+  "cuda": true,
+  "cases": [
+    {
+      "mode": 0,
+      "path": "outputs\\独立项目验收_模式0.wav",
+      "seconds": 3.971,
+      "sample_rate": 22050,
+      "channels": 1,
+      "peak": 0.999969482421875,
+      "rms": 0.4158484565491218,
+      "finite": true,
+      "elapsed_seconds": 9.417,
+      "model_reused": true
+    },
+    {
+      "mode": 1,
+      "path": "outputs\\独立项目验收_模式1.wav",
+      "seconds": 5.968,
+      "sample_rate": 22050,
+      "channels": 1,
+      "peak": 0.999969482421875,
+      "rms": 0.34830435409696414,
+      "finite": true,
+      "elapsed_seconds": 8.278,
+      "model_reused": true
+    },
+    {
+      "mode": 2,
+      "path": "outputs\\独立项目验收_模式2.wav",
+      "seconds": 5.05,
+      "sample_rate": 22050,
+      "channels": 1,
+      "peak": 0.999969482421875,
+      "rms": 0.37012116183116134,
+      "finite": true,
+      "elapsed_seconds": 7.447,
+      "model_reused": true
+    },
+    {
+      "mode": 3,
+      "path": "outputs\\独立项目验收_模式3.wav",
+      "seconds": 4.83,
+      "sample_rate": 22050,
+      "channels": 1,
+      "peak": 0.999969482421875,
+      "rms": 0.4188240195858775,
+      "finite": true,
+      "elapsed_seconds": 16.007,
+      "model_reused": true
+    }
+  ],
+  "model_load_seconds": 28.204
+}

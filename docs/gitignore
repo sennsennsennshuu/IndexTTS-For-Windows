@@ -1,0 +1,25 @@
+# 本仓库根目录只保留三个普通文件，因此将忽略规则放在 docs/。
+# 新克隆仓库后执行：git config --local core.excludesFile docs/gitignore
+/even/
+/models/
+/cache/
+/logs/
+/.uploads/
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+*.log
+*.tmp
+*.dmp
+
+# 仅保留本次合成验收样例，不提交后续个人生成音频。
+/outputs/*
+!/outputs/独立项目验收_模式0.wav
+!/outputs/独立项目验收_模式1.wav
+!/outputs/独立项目验收_模式2.wav
+!/outputs/独立项目验收_模式3.wav
+
+# 上传结束后的远端核对记录留在本地，避免记录提交自身哈希造成循环。
+/docs/github_publish.json

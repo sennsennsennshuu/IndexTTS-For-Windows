@@ -1,0 +1,12 @@
+{
+  "visible": true,
+  "exit_code": 0,
+  "screenshot_saved": true,
+  "result_preview_saved": true,
+  "emotion_preview_saved": true,
+  "waveform_bins": 180,
+  "window_logical_size": [
+    1180,
+    820
+  ]
+}
