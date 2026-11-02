@@ -34,7 +34,8 @@ def get_session():
 
 
 def api(session, method, suffix, data=None):
-    response = session.request(method, f"https://api.github.com/repos/{REPOSITORY}/{suffix}", json=data, timeout=(20, 45))
+    url = f"https://api.github.com/repos/{REPOSITORY}" + (f"/{suffix}" if suffix else "")
+    response = session.request(method, url, json=data, timeout=(20, 45))
     if response.status_code >= 300:
         raise RuntimeError(f"GitHub {method} {suffix}: HTTP {response.status_code}: {response.text[:600]}")
     return response.json() if response.content else None
