@@ -1,4 +1,4 @@
-"""发布已验证的 v1.2.0 发行包；凭据仅从现有 Git 登录状态读取到内存。"""
+"""发布已验证的 2.5 轻量包；凭据仅从现有 Git 登录状态读取到内存。"""
 from pathlib import Path
 import argparse
 import hashlib
@@ -11,9 +11,11 @@ from concurrent.futures import ThreadPoolExecutor
 from urllib.parse import quote
 import requests
 
+sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
+from tools.build_release import VERSION, OUTPUT
+
 REPOSITORY = "sennsennsennshuu/IndexTTS-For-Windows"
-TAG = "v1.2.0"
-OUTPUT = Path("build/release_v1.2.0")
+TAG = f"v{VERSION}"
 
 
 def get_session():
@@ -102,41 +104,41 @@ def upload_asset(session, release, path):
 
 def main():
     parser = argparse.ArgumentParser()
-    parser.add_argument("--commit", required=True, help="已推送并打上 v1.2.0 标签的提交")
+    parser.add_argument("--commit", required=True, help="已推送且具有当前版本标签的提交")
     parser.add_argument("--lightweight", action="store_true", help="发布用户选择的首次启动安装 even/ 的轻量包")
     args = parser.parse_args()
-    output = Path("build/release_v1.2.0_light") if args.lightweight else OUTPUT
+    output = OUTPUT
     verification = json.loads((output / "verification.json").read_text(encoding="utf-8"))
     assert verification["crc_passed"] and verification["models_excluded_verified"]
-    if args.lightweight:
-        assert verification["bootstrap_python_installed"] and verification["dependencies_resolved"]
-        assert verification["regression_tests_passed"] == 16
-    else:
-        assert verification["relocation_smoke"]["four_ui_modes"] and verification["missing_models_reported"]
-        assert verification["pip_check"] == "No broken requirements found."
+    assert verification["all_payload_hashes_verified"] and verification["old_engine_excluded"]
+    assert verification["extracted_ui_smoke"]
+    runtime = json.loads(Path("docs/upgrade_v25_verification.json").read_text(encoding="utf-8"))
+    assert runtime["regression_tests_passed"] >= 25 and runtime["pip_check_passed"]
+    inference = json.loads(Path("docs/inference_verification.json").read_text(encoding="utf-8"))
+    assert inference["model_version"] == "2.5" and inference["all_passed"]
     manifest = json.loads((output / "release_manifest.json").read_text(encoding="utf-8"))
+    if manifest["source_dirty"] or manifest["source_commit"] != args.commit:
+        raise RuntimeError("发行包必须来自指定的干净提交，请提交后重新构建并验证。")
     archives = [output / item["name"] for item in manifest["archives"]]
     assert all(path.stat().st_size < 2 * 1024**3 for path in archives)
     session = get_session()
     reference = api(session, "GET", "git/ref/tags/" + TAG)
     if reference["object"]["sha"] != args.commit:
-        raise RuntimeError("v1.2.0 标签与待发布提交不一致")
+        raise RuntimeError(f"{TAG} 标签与待发布提交不一致")
     repo = api(session, "GET", "")
     assert repo["id"] == 1241927776
     releases = api(session, "GET", "releases?per_page=30")
     release = next((r for r in releases if r["tag_name"] == TAG), None)
     if release is not None and not release["draft"]:
-        raise RuntimeError("v1.2.0 已发布，本工具不直接覆盖已发布版本")
-    if release is None:
-        release = next((r for r in releases if r["id"] == 324201366 and r["draft"]), None)
-    body = Path("docs/RELEASE_v1.2.0.md").read_text(encoding="utf-8")
+        raise RuntimeError(f"{TAG} 已发布，本工具不直接覆盖已发布版本")
+    body = Path(f"docs/RELEASE_{TAG}.md").read_text(encoding="utf-8")
     body += f"\n\n![新版语音工作台](https://raw.githubusercontent.com/{REPOSITORY}/{TAG}/docs/desktop_result.png)\n"
-    payload = {"tag_name": TAG, "target_commitish": args.commit, "name": "v1.2.0 · Windows 深色工作台（不含模型）",
+    payload = {"tag_name": TAG, "target_commitish": args.commit, "name": f"{TAG} · IndexTTS 2.5 多语种工作台（不含模型）",
                "body": body, "draft": True, "prerelease": False}
     release = api(session, "PATCH", f"releases/{release['id']}", payload) if release else api(session, "POST", "releases", payload)
     (output / "draft_state.json").write_text(json.dumps({"release_id": release["id"], "tag": TAG}, indent=2), encoding="utf-8")
     print(f"Release 草稿已准备：id={release['id']} / {TAG}", flush=True)
-    attachments = [*archives, output / "SHA256SUMS.txt", output / "release_manifest.json", Path("docs/RELEASE_v1.2.0.md")]
+    attachments = [*archives, output / "SHA256SUMS.txt", output / "release_manifest.json", Path(f"docs/RELEASE_{TAG}.md")]
     # 两个环境附件互不依赖，可并行上传；程序和说明先上传，便于独立核对。
     small = [path for path in attachments if path.stat().st_size < 100 * 1024**2]
     large = [path for path in attachments if path not in small]

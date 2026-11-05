@@ -1,0 +1,83 @@
+{
+  "checked_unix": 1793833447.2230802,
+  "app_version": "1.4.0",
+  "language_code": "ZH-NAN-TW",
+  "language_label": "台语（台湾闽南语）",
+  "model_directory": "models/extra_language/zh-nan-tw/model",
+  "model_files_verified": 37,
+  "model_manifest_sha256": "fc3354df2028f3161866348a688b899629cd6579ef685a1de353ad2a9af7a34f",
+  "words": {
+    "by_license": {
+      "CC-BY-NC-4.0": 100,
+      "CC-BY-ND-3.0-TW": 33350,
+      "CC-BY-SA-4.0": 106856,
+      "CC0-1.0": 20801,
+      "MIT": 156978,
+      "Public website; no explicit reuse license found (private-use only; obtain permission before redistribution)": 991
+    },
+    "by_source": {
+      "chhoe_itaigi": 20801,
+      "chhoe_kauiokpoo": 33350,
+      "chhoe_pehoe": 5889,
+      "chhoe_taihoa": 100967,
+      "icorpus_100": 100,
+      "pts_taigi_words": 991,
+      "thuocl": 156978
+    },
+    "entries": 319076,
+    "sentence": 3470,
+    "verified": 162098,
+    "with_hanzi": 153837,
+    "with_mandarin": 317452,
+    "with_tailo": 162098,
+    "word": 315606
+  },
+  "words_sha256": "faa899eb598fd23ea545e160436c8ea1aa826b860e9095470095c8c912dbbc1e",
+  "translation_profiles": {
+    "marian": {
+      "files": 10,
+      "revision": "0c13daaf7758f9863b704571cb48512955a856a6",
+      "bytes": 313332049
+    },
+    "taigi": {
+      "files": 3,
+      "revision": "57f8ce7b2109cbfc02cf30f78e3465dc98678e21",
+      "bytes": 4217571079
+    }
+  },
+  "translation_modes": [
+    "full",
+    "compact",
+    "none"
+  ],
+  "regression_tests_passed": 71,
+  "regression_log": "logs/minnan_regression_final.log",
+  "desktop": {
+    "phase": "complete",
+    "source": "我今天下午要去医院看医生。",
+    "qt_platform": "windows",
+    "native_listening_passed": false,
+    "translated": "我今仔日下晡欲去病院看醫生。",
+    "input_mode": "mandarin",
+    "translation_mode": "full",
+    "audio": "outputs/tts_20261105_070242_595400_0e6b0c.wav",
+    "sample_rate": 22050,
+    "audio_seconds": 4.5859410430839,
+    "seconds": 58.64100000000326
+  },
+  "chinese_roundtrip_audio_equal": true,
+  "simplified_traditional_checked_sentence_equal": true,
+  "dictionary_only_unknown_rejected": true,
+  "source_package_files_checked": 107,
+  "source_package_root_files": [
+    "requirements.txt",
+    "run.bat",
+    "start.py"
+  ],
+  "native_listening_passed": false,
+  "sources": "docs/MINNAN_WORDS_SOURCES.md",
+  "screenshots": [
+    "docs/minnan_desktop.png"
+  ],
+  "earlier_precheck_observation": "A native desktop precheck failed before synthesis without assertion detail; instrumented rerun completed with explicit input and translation modes."
+}

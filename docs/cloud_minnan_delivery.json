@@ -1,0 +1,18 @@
+{
+  "sha256": "5aa89cd998419accf8c470e981d926a126ae63622cda7c80bf0bdb2935b1250b",
+  "bytes": 64741786,
+  "local_directory": "models/extra_language/zh-nan-tw/model",
+  "remote_checkpoint": {
+    "step": 15000,
+    "path": "training/runs/minnan-lora/checkpoints/step_015000",
+    "val_loss": 4.689264848111948,
+    "best_val_loss": 4.689264848111948
+  },
+  "received_unix": 1793828176.0759468,
+  "formal_training_complete": true,
+  "native_listening_passed": false,
+  "paired_cases": 8,
+  "full_sampling_audit_passed": true,
+  "previous_directory": "models\\IndexTTS-2.5-Minnan-LoRA\\5aa89cd99841",
+  "relocated_unix": 1793831078.7311318
+}

@@ -1,0 +1,63 @@
+{
+  "model_version": "2.5",
+  "offline": true,
+  "cuda": true,
+  "cases": [
+    {
+      "name": "拼音标注",
+      "mode": 0,
+      "lang": "ZH",
+      "duration_factor": 1.0,
+      "path": "outputs\\2.5验收_拼音标注.wav",
+      "seconds": 2.833,
+      "sample_rate": 22050,
+      "channels": 1,
+      "peak": 0.980010986328125,
+      "rms": 0.3744286282168252,
+      "finite": true,
+      "clipped_fraction": 0.0,
+      "elapsed_seconds": 9.129,
+      "model_reused": true,
+      "qwen_loaded": false,
+      "peak_cuda_mib": 5921.6
+    },
+    {
+      "name": "音素标注",
+      "mode": 0,
+      "lang": "EN",
+      "duration_factor": 1.0,
+      "path": "outputs\\2.5验收_音素标注.wav",
+      "seconds": 6.458,
+      "sample_rate": 22050,
+      "channels": 1,
+      "peak": 0.97998046875,
+      "rms": 0.43797866593208745,
+      "finite": true,
+      "clipped_fraction": 0.0,
+      "elapsed_seconds": 12.74,
+      "model_reused": true,
+      "qwen_loaded": false,
+      "peak_cuda_mib": 6010.7
+    },
+    {
+      "name": "假名标注",
+      "mode": 0,
+      "lang": "JA",
+      "duration_factor": 1.0,
+      "path": "outputs\\2.5验收_假名标注.wav",
+      "seconds": 3.425,
+      "sample_rate": 22050,
+      "channels": 1,
+      "peak": 0.980010986328125,
+      "rms": 0.3891453818349439,
+      "finite": true,
+      "clipped_fraction": 0.0,
+      "elapsed_seconds": 4.905,
+      "model_reused": true,
+      "qwen_loaded": false,
+      "peak_cuda_mib": 6009.7
+    }
+  ],
+  "model_load_seconds": 33.577,
+  "all_passed": true
+}

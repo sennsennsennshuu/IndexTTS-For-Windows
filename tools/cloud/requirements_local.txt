@@ -1,0 +1,6 @@
+# Windows 本机 SSH／后台回收辅助工具；桌面推理不依赖这些包。
+--index-url https://pypi.tuna.tsinghua.edu.cn/simple
+paramiko==3.5.1
+bcrypt==5.0.0
+cryptography==50.0.2
+pynacl==1.6.2

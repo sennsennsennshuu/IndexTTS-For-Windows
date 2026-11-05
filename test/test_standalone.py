@@ -29,12 +29,18 @@ class StandaloneTests(unittest.TestCase):
     def test_local_python_and_dependencies(self):
         self.assertEqual(Path(sys.prefix).resolve(), Path("even").resolve())
         import torch
-        import indextts.infer_v2
+        import indextts.infer_v2_5
         self.assertTrue(Path(torch.__file__).resolve().is_relative_to(Path("even").resolve()))
-        self.assertTrue(Path(indextts.infer_v2.__file__).resolve().is_relative_to(Path("vendor").resolve()))
+        self.assertTrue(Path(indextts.infer_v2_5.__file__).resolve().is_relative_to(Path("vendor").resolve()))
+        # 使用 run.bat 的真实版本检查器，防止标记缺少换行导致无限重复安装。
+        import subprocess
+        from app.paths import APP_VERSION
+        marker = subprocess.run(["findstr.exe", "/x", "/c:" + APP_VERSION, str(Path("even/.indextts_environment_version"))], capture_output=True)
+        self.assertEqual(marker.returncode, 0, marker.stderr)
 
     def test_complete_offline_models(self):
-        self.assertEqual(validate_models(), 18)
+        self.assertEqual(validate_models(), 14)
+        self.assertEqual(validate_models(require_emotion=True), 18)
         self.assertEqual(os.environ["HF_HUB_OFFLINE"], "1")
         self.assertEqual(os.environ["HF_HUB_CACHE"], "cache/huggingface/hub")
 
@@ -47,7 +53,7 @@ class StandaloneTests(unittest.TestCase):
             self.assertEqual(not window.emo_vector_widget.isHidden(), mode == 2)
             self.assertEqual(not window.emo_text_widget.isHidden(), mode == 3)
         self.assertGreater(window.top_p_spin.minimum(), 0)
-        self.assertEqual(Path(window.get_indextts_model_path()), Path("models/IndexTTS-2"))
+        self.assertEqual(Path(window.get_indextts_model_path()), Path("models/IndexTTS-2.5"))
         window.close()
 
     def test_invalid_input_fails_before_loading(self):

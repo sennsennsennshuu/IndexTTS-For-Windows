@@ -14,15 +14,19 @@ __pycache__/
 *.tmp
 *.dmp
 
-# 仅保留本次合成验收样例，不提交后续个人生成音频。
+# 合成验收音频与个人音频均留在本地；仓库记录可复查的测试结果。
 /outputs/*
-!/outputs/独立项目验收_模式0.wav
-!/outputs/独立项目验收_模式1.wav
-!/outputs/独立项目验收_模式2.wav
-!/outputs/独立项目验收_模式3.wav
 
 # 上传结束后的远端核对记录留在本地，避免记录提交自身哈希造成循环。
 /docs/github_publish.json
 /build/
 /docs/release_publish.json
 /tools/bootstrap/uv.exe
+
+# SSH 凭据、训练语料和云端运行回执仅保留本地，禁止打包或上传 Git。
+/ssh.txt
+/training/data/
+/training/audio/
+/training/features/
+/training/runs/
+/training/secrets/

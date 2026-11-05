@@ -159,7 +159,7 @@ class AudioDrop(QFrame):
         self.browse.clicked.connect(self.browse_requested)
         layout.addWidget(self.browse)
 
-    def set_file(self, path):
+    def set_file(self, path, display_name=None):
         """只做轻量元数据读取，不在界面中加载声学模型。"""
         file = Path(path)
         if not path or not file.is_file():
@@ -171,7 +171,8 @@ class AudioDrop(QFrame):
             self.style().unpolish(self); self.style().polish(self)
             return
         from PyQt6.QtGui import QFontMetrics
-        self.title.setText(QFontMetrics(self.title.font()).elidedText(file.name, Qt.TextElideMode.ElideMiddle, 235))
+        self.title.setText(QFontMetrics(self.title.font()).elidedText(
+            display_name or file.name, Qt.TextElideMode.ElideMiddle, 235))
         self.title.setToolTip(str(file))
         try:
             import soundfile as sf

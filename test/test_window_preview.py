@@ -32,7 +32,7 @@ def main():
     window.auto_play.setChecked(False)
     window.text_input.setPlainText("你好，这是独立项目的语音合成测试。")
     window.speaker_audio_input.setText("test/fixtures/reference.wav")
-    window.play_generated_audio("outputs/独立项目验收_模式0.wav")
+    window.play_generated_audio("outputs/2.5验收_情感模式0.wav")
     window.update_status("语音已生成", "done")
     window.status_hint.setText("音频已保存。可以继续调整文本，或试听当前结果。")
     app.processEvents()

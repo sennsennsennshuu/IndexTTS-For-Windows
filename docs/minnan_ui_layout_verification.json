@@ -1,0 +1,112 @@
+{
+  "verified_at": "2026-11-05T07:31:40.144068+08:00",
+  "changes": [
+    "remove_minnan_banner",
+    "two_column_labeled_selectors",
+    "scrollable_editor_body",
+    "remove_voice_studio",
+    "subtitle_zeroshot_speech_synthesis"
+  ],
+  "tests_passed": 51,
+  "tests": [
+    {
+      "name": "minnan_ui",
+      "log": "logs/minnan_ui_layout_regression.log",
+      "passed": 15
+    },
+    {
+      "name": "original_ui",
+      "log": "logs/minnan_ui_layout_compat.log",
+      "passed": 7
+    },
+    {
+      "name": "voice_library",
+      "log": "logs/minnan_ui_layout_voice_compat.log",
+      "passed": 29
+    }
+  ],
+  "native_desktop": {
+    "qt_platform": "windows",
+    "fixture_preview": true,
+    "states": [
+      {
+        "name": "normal",
+        "requested": [
+          1180,
+          820
+        ],
+        "actual": [
+          1180,
+          820
+        ],
+        "fields": {
+          "minnan_mode_combo": {
+            "text_width": 156,
+            "available_text_width": 423
+          },
+          "minnan_translation_combo": {
+            "text_width": 24,
+            "available_text_width": 194
+          }
+        },
+        "screenshot": "docs/minnan_layout_normal.png",
+        "editor_scroll_range": 223
+      },
+      {
+        "name": "compact",
+        "requested": [
+          1000,
+          700
+        ],
+        "actual": [
+          1000,
+          700
+        ],
+        "fields": {
+          "minnan_mode_combo": {
+            "text_width": 156,
+            "available_text_width": 303
+          },
+          "minnan_translation_combo": {
+            "text_width": 24,
+            "available_text_width": 134
+          }
+        },
+        "screenshot": "docs/minnan_layout_compact.png",
+        "editor_scroll_range": 308
+      },
+      {
+        "name": "maximized",
+        "requested": null,
+        "actual": [
+          1707,
+          996
+        ],
+        "fields": {
+          "minnan_mode_combo": {
+            "text_width": 156,
+            "available_text_width": 774
+          },
+          "minnan_translation_combo": {
+            "text_width": 24,
+            "available_text_width": 370
+          }
+        },
+        "screenshot": "docs/minnan_layout_maximized.png",
+        "editor_scroll_range": 113
+      }
+    ],
+    "passed": true
+  },
+  "sha256": {
+    "app/window.py": "2c2278978d5f1f1a8e213b60bb69a78075b9188370c3aad83d09a71398184e12",
+    "app/theme.py": "93ed32a62766991ea2d9e6867a61b06ad39932ba550728f19cfe350b815ac9b3",
+    "test/test_minnan_ui.py": "dd499bac680afc459a7fab1308295c339462b763bb9ce1f0e3456c0f220509f9",
+    "test/test_minnan_layout_desktop.py": "be02a490fda5efb7667dfdf2c9f5840ed7345798be46c93c2f99d05cad4d8a3f",
+    "docs/README.md": "73c7c98723fc06796c0c8777217485b02e4141ac7e3c886fad163961080aca78",
+    "docs/TODO.md": "f571f9a162a49300956ad78986ccd74e36c0f06ddc06c315e9b87be05681b989",
+    "docs/minnan_layout_normal.png": "6f5a9d7f770a566583785eb74a287181a345c50358a505ae1cc1069fd88fa53a",
+    "docs/minnan_layout_compact.png": "3427e93b83bf350e4d95f5d657442d1590175dac52532fd012f701637fe08eae",
+    "docs/minnan_layout_maximized.png": "16277932b7c4d275ef6f391fa22c2091f66a48931a65993b011a0a32f500e3d7"
+  }
+}

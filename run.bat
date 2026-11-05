@@ -16,6 +16,12 @@ if exist "even\.indextts_setup_pending" (
     call :setup_environment
     if errorlevel 1 exit /b 1
 )
+rem 即使 even 已存在，也要确保安装了台语语言包新增依赖。
+findstr /x /c:"1.4.0" "even\.indextts_environment_version" >nul 2>nul
+if errorlevel 1 (
+    call :setup_environment
+    if errorlevel 1 exit /b 1
+)
 "even\python.exe" -X utf8 -I -B "start.py" %*
 set "INDEXTTS_EXIT=%ERRORLEVEL%"
 if not "%INDEXTTS_EXIT%"=="0" (

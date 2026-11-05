@@ -11,12 +11,12 @@ QDialog#studio { background: #101215; }
 QWidget { color: #e5e8ed; font-family: 'Microsoft YaHei UI', 'Microsoft YaHei'; font-size: 12px; }
 QLabel { background: transparent; border: none; }
 QLabel#brand { font-size: 22px; font-weight: 700; letter-spacing: -0.7px; }
-QLabel#brandTag { color: #7f8c9d; font-size: 10px; letter-spacing: 2px; }
 QLabel#subtitle { color: #87919e; font-size: 12px; }
 QLabel#sectionTitle { font-size: 15px; font-weight: 600; }
 QLabel#eyebrow { color: #758295; font-size: 10px; letter-spacing: 1.7px; }
 QLabel#muted { color: #929ba9; font-size: 11px; }
 QLabel#quiet { color: #75808f; font-size: 11px; }
+QLabel#voiceError { color: #d1a4a4; font-size: 11px; }
 QLabel#status { color: #a9b8ca; font-size: 12px; }
 QLabel#status[state='error'] { color: #d1a4a4; }
 QLabel#status[state='done'] { color: #b8c9d9; }
@@ -38,6 +38,7 @@ QPushButton:pressed { background: #1e2530; }
 QPushButton:disabled { background: #20242a; color: #626d7c; border-color: #2d333d; }
 QPushButton#ghost { background: transparent; border: 1px solid transparent; color: #9ca8ba; padding: 6px 8px; }
 QPushButton#ghost:hover { background: #262d37; color: #e2e7ee; }
+QPushButton#voiceDelete { color: #d7b6b6; border-color: #715454; }
 QPushButton#primary { background: #a7b7cb; color: #111820; border: none; font-size: 14px; font-weight: 600; padding: 13px 26px; border-radius: 7px; }
 QPushButton#primary:hover { background: #bccadb; }
 QPushButton#primary:pressed { background: #8e9fb6; }

@@ -1,132 +1,126 @@
 # IndexTTS For Windows
 
-本项目从原桌面助手的 `file/extend/IndexTTS` 模块分离，保留原来的 PyQt6 语音合成窗口和 IndexTTS2 推理模型。模型、Python、运行依赖、缓存、日志和输出均放在本项目内，正常启动无需原桌面助手、全局 Conda 环境或联网下载。
+本项目是基于官方 **IndexTTS 2.5** 的 Windows 本地语音工作台，应用版本 **1.4.0**。支持中文、英文、日语、西班牙语、阿拉伯语，以及加载独立语言包后的台语（台湾闽南语）；使用一段参考录音克隆音色，支持四种情感模式、生成时的时长控制及发音标注。
 
-![深色语音工作台](desktop_result.png)
+![深色语音工作台](minnan_layout_normal.png)
 
-## GitHub 源码与本地完整项目
+## 启动
 
-GitHub 仓库发布当前独立桌面应用的源码、上游推理源码、依赖版本清单、界面截图、测试及合成验收样例。`even/` Python 环境、`models/` 模型文件、缓存和运行日志保留在本地，未放入 Git 提交。
+在项目目录双击 `run.bat`。首次运行自动下载 Python 3.11、安装依赖到项目内 `even/`；已存在的环境会按版本标记补齐新增依赖。普通依赖优先使用清华镜像，失败后尝试阿里云镜像；PyTorch CUDA wheel 使用官方补充源。无需全局 Python 或 Conda。
 
-因此，仅克隆 GitHub 仓库时还需要准备本项目内的 `even/` 和 `models/IndexTTS-2/`，随后才能启动；本机已经整理好的完整项目可以直接运行。
-
-新机器可使用本机安装的 Conda，在项目目录创建所需的 Python 运行时并安装依赖：
+程序包不含模型。首次准备模型时，先完成运行环境安装，再按 `MODEL_SETUP.md` 下载权重到 `models/IndexTTS-2.5/`。程序运行时只读取项目内文件，缺失模型会显示具体路径，不会自动转用全局缓存。
 
 ```powershell
-conda create --prefix ./even python=3.11 pip -y
-.\even\python.exe -m pip install -r .\requirements.txt
+.\run.bat
+# 检查核心模型；增加 --with-emotion 可同时检查文字情感模型。
+.\run.bat --check --with-emotion
 ```
 
-模型文件应按 `model_manifest.json` 中的相对路径准备到 `models/IndexTTS-2/`，包括主模型、Qwen 情感模型、w2v-bert、MaskGCT semantic codec、campplus 和 BigVGAN 推理权重。之后运行 `.\run.bat --check` 检查环境及必要模型。
+模型下载和首次环境安装需要联网；模型准备完成后的语音合成可离线运行。缺少模型时仍可打开界面查看说明，生成前会检查当前模式必需的文件。
 
-为继续遵守“根目录只有三个普通文件”的结构约定，Git 忽略规则保存在 `docs/gitignore`。新克隆后，在项目目录执行以下命令，避免后续提交环境、模型或个人输出：
+## 使用
+
+1. 输入文本，在“语言与节奏”中选择合成语言。
+2. 拖入或选择音色参考音频，或在“音色库”下拉中选择已保存音色。
+3. 按需要设置时长系数、情感和高级参数，点击“生成语音”。
+4. 在结果区试听、点击波形定位，或打开 `outputs/` 查看 WAV 文件。
+
+普通窗口下，台语输入方式与翻译模型按两列显示，各自的标签位于选择框上方。台语转换区或发音帮助展开后，可在左侧文本卡片内滚动查看原文、转换选项和译文；卡片标题、结果播放器和底部生成按钮保持可见。
+
+时长系数为 `0.5–2.0`，`1.0` 为正常时长；小于 1 更快，大于 1 更慢。例如 `0.8` 约为原时长的 80%，`1.2` 约为原时长的 120%。这是模型生成过程的节奏控制，实际音频长度还受采样、停顿和分段影响。
+
+发音控制直接写在合成文本中；点击“发音标注帮助”可查看示例：
+
+```text
+他在银<行|HANG2>工作。
+He had a <minute|M IH1 . N AH0 T> to think.
+彼は料理が<上手|じょうず>です。
+```
+
+四种情感模式包括：跟随音色参考、使用独立情感参考音频、八维情感向量、文字描述。文字情感模型只在首次使用该模式时加载到 CPU；其他模式无需该模型。空白情感描述表示从合成文本分析情感。
+
+高级参数包括采样温度、Top P、Top K 和分段 Token 上限。8 GB 显存设备自动启用官方的长文本分段。发音标注会作为完整片段处理，英文音素中的句点不会截断标注；标注本身超过 Token 上限时会明确提示。
+
+## 音色库
+
+“声音参考”卡片内提供独立的“音色库”区域，沿用深色蓝灰样式。
+
+1. 先拖入或选择参考录音，在名称框填写名称，点击“保存”。程序复制录音到项目内音色库，并立即应用。
+2. 在下拉框选择已保存音色即可用于下一次合成，参考区显示音色名称、录音时长和采样率。重启程序会恢复上次选择。
+3. 点击“删除”，确认后移除该条目及库内副本；“取消”保留条目。删除当前使用的音色时清空声音参考，须重新选择后再生成。
+
+音色库位于 `models/voice_library/`：`library.json` 保存名称、相对路径、录音元数据、SHA-256 和上次选择，`audio/` 保存录音副本。原始录音不会被覆盖或删除，原录音移动后已保存音色仍可使用。同名音色会被拒绝，请换名另存；无法解码、全静音或超过 100 MB 的录音不能保存，M4A 等格式无法读取时请先转换为 WAV／FLAC。
+
+这里的“音色”是 **IndexTTS 参考录音预设**，保存时不训练新模型。基础模型与台语 LoRA 继续由原语言设置控制；同一音色可用于各已支持语言，实际跨语言听感取决于模型。生成期间锁定库操作，避免正在使用的录音被本窗口删除；手动更换参考音频后自动切回临时参考状态。录音丢失或清单损坏会明确提示，清单损坏时保留原文件，仍可手动选择参考音频合成。
+
+个人音色库随 `models/` 保持本地，不进入 Git 源码或不含模型的发行包。
+
+## 台语与普通话输入
+
+选择“台语（台湾闽南语）”，默认输入普通话。程序先查询词库中的明确对译，未命中
+时调用项目内 Taigi-Llama-2 专用模型转换为台语，再由台语 LoRA 合成。下方“台语
+转换结果”可以直接编辑，生成使用当前结果，不会再次把它当普通话翻译。
+也可以切换“台语汉字”或“带声调台罗”，直接输入台语。翻译在后台线程中运行，
+首轮需要加载模型和词库，完成后显示结果；原普通话输入会保留。
+
+语言包放在 `models/extra_language/zh-nan-tw/`：`model/` 为正式适配器及语言行，
+`words/` 为带来源的词库，`translation/taigi/` 为 7B Q4_K_M 翻译模型。台语语音仍
+需要匹配的 `models/IndexTTS-2.5/` 基础权重。详见 `MINNAN_LANGUAGE_PACK.md`。
+
+翻译模型限非商业用途，词库各来源许可不同；许可和原始文件摘要随语言包保存。
+自动译文、专有名词及声调需要复核；词库没有收录整句时会使用翻译模型，不能把
+THUOCL 普通话候选词当成已确认台语对译。
+
+## 本地运行与质量处理
+
+- 项目内 `even/python.exe` 为唯一运行解释器，缓存、临时文件和日志均在本项目内。
+- CUDA 设备支持时使用 BF16；不支持时使用 FP32。不要求安装 DeepSpeed、FlashAttention 或现场编译 CUDA 扩展。
+- 已加载的模型与未变化的参考条件重复使用；相同路径的录音被覆盖后，会重新提取参考条件。
+- 声码器输出超限时先等比例降低增益，再转换 PCM，避免直接截幅带来的失真；保留官方尾部淡出处理。
+- 结果先写入临时音频，确认可解码后才替换最终文件；生成失败不会损坏同名已有结果。
+- 生成期间锁定声音设置，后台任务结束后恢复；关闭窗口时等待当前任务安全结束。
+- 西班牙语数字等文本归一化沿用官方可选 NeMo 前端；Windows 默认依赖不含 NeMo，不可用时按官方逻辑保留原文，数字可写成相应语言文字。
+
+## 目录与分发
+
+```text
+IndexTTS/
+├── run.bat
+├── start.py
+├── requirements.txt
+├── app/                       # 桌面工作台、推理与线程
+├── even/                      # 项目内 Python 及依赖
+├── vendor/                    # 官方 2.5 推理所需源码与许可证
+├── models/IndexTTS-2.5/        # 2.5 主模型及辅助权重
+├── models/extra_language/zh-nan-tw/ # 台语模型、词库及整句翻译
+├── models/voice_library/       # 个人音色名称、录音副本与选择状态（首次保存创建）
+├── outputs/                   # 生成音频
+├── cache/                     # 缓存与临时文件
+├── logs/                      # 运行和验收日志
+├── test/                      # test_ 开头的测试脚本
+├── tools/                     # 环境安装、模型下载及无模型打包
+└── docs/                      # 使用说明、来源、待办与验收记录
+```
+
+根目录只有 `run.bat`、`start.py`、`requirements.txt` 三个普通文件。源码与轻量发行包不包含运行环境或模型。Git 忽略规则位于 `docs/gitignore`，克隆后执行：
 
 ```powershell
 git config --local core.excludesFile docs/gitignore
 ```
 
-## 启动
+## 验证与构建
 
-GitHub Release 的 `v1.2.0` 提供不含模型的轻量 Windows 程序包。首次双击 `run.bat` 会联网下载 Python 3.11 并将依赖安装到项目内 `even/`，无需提前安装 Python 或 Conda；中断后可再次运行重试。已配好 `even/` 的本机项目仍直接启动。
-
-程序包和安装器不下载模型。模型放置路径见 `MODEL_SETUP.md`，本版详细说明见 `RELEASE_v1.2.0.md`。
-
-双击项目根目录的 `run.bat`，或者在项目目录打开 PowerShell：
+以下命令均在项目根目录执行，使用真实宿主机的项目内环境：
 
 ```powershell
-.\run.bat
-```
-
-输入文本，选择音色参考音频，选择情感模式后点击“生成语音”。生成结果保存在 `outputs/`；可点击“打开输出目录”查看。默认完成后自动播放音频。
-
-原有四种情感控制方式均保留：沿用音色参考音频的情感、使用情感参考音频、设置八维情感向量、输入文字情感描述。
-
-## 工作台界面
-
-界面采用炭黑、深灰与少量蓝灰色的平面配色。左侧为文本编辑和结果试听，右侧集中放置声音参考、情感表达及高级参数，底部固定显示状态与生成操作。
-
-- 参考音频可点击选择，也可以直接拖入“声音参考”区域；选择后显示文件名、时长及采样率。
-- 情感表达使用四个互斥按钮切换；情感向量以双列滑杆展示，支持鼠标拖动及键盘微调。
-- 高级参数默认收起，点击后可编辑采样温度、Top P、Top K 与分段 Token 上限。
-- 生成结果显示真实音频波形、文件名、时长和采样率；可播放、暂停，点击波形定位。
-- “完成后自动播放”可关闭；生成完成直接更新结果区，不再弹出完成提示框。
-- 右侧设置独立滚动，在较小窗口中展开设置后，底部生成操作仍保持可见。
-
-Windows 实际窗口截图见 `desktop_window.png`、`desktop_result.png` 和 `desktop_emotion.png`。本轮界面验证记录见 `ui_verification.json`。
-
-首次生成需要加载模型；后续任务复用同一个模型。生成时点击关闭，会在当前任务结束后自动关闭，避免工作线程被强制销毁。
-
-## 目录
-
-```text
-IndexTTS/
-├── run.bat                    # 双击入口，固定使用项目内 Python
-├── start.py                   # 桌面应用入口及环境检查
-├── requirements.txt           # 当前运行环境的完整版本锁定清单
-├── app/                       # 独立窗口、推理封装、工作线程、路径管理
-├── even/                      # 独立 CPython 3.11 运行时及依赖
-├── vendor/                    # 复制的 IndexTTS 源码及原许可证
-├── models/IndexTTS-2/          # 主模型、情感模型及必要辅助权重
-├── outputs/                   # 生成音频，包括本次四种模式的验收样例
-├── cache/                     # 项目内缓存与临时目录
-├── logs/                      # 应用日志和验证日志
-├── test/                      # test_ 开头的回归、真实合成与完整性检查脚本
-├── tools/                     # 可选的依赖迁移辅助工具
-└── docs/                      # 使用说明、待办、验证结果和迁移记录
-```
-
-项目根目录的普通文件严格限制为 `run.bat`、`start.py`、`requirements.txt`。
-
-## 环境与模型
-
-本次环境从原助手实际使用的 Python 运行时中复制，按依赖元数据选择 IndexTTS 所需的包及其依赖闭包；未使用原助手的轻量 `.venv`，也不需要激活原来的 Conda 环境。
-
-- Python：3.11.15，独立运行时在 `even/python.exe`。
-- PyTorch / torchaudio：2.8.0+cu129。
-- Transformers：4.52.1。
-- PyQt6：6.11.0。
-- 当前依赖闭包共 120 个发行包，`pip check` 通过。
-- Qwen 文字情感分类固定使用 CPU；当前机器的语音合成使用 GPU，避免约 8 GB 显存被常驻分类模型挤占。
-- 不使用 DeepSpeed、torch.compile 或需要现场编译的 BigVGAN CUDA 扩展；普通 PyTorch CUDA 运算仍然启用。
-- 必要辅助模型均已复制，本项目默认按离线方式运行。
-
-模型仅复制推理需要的资源，未复制原目录内未使用的训练优化器、其他任务权重及重复模型。源项目和源模型文件保持原样。所复制模型与源文件的 SHA-256 比对结果见 `model_manifest.json`。
-
-原环境中未使用的命令启动器已清理；当前 `even/Scripts/` 中的运行依赖命令已使用项目内解释器重新生成。
-
-## 检查与测试
-
-以下命令均在项目根目录执行：
-
-```powershell
-# 检查本地解释器、核心依赖、CUDA 和 18 项必要模型文件
-.\run.bat --check
-
-# 窗口、相对路径、线程关闭、中文路径及结果回调回归测试
-.\even\python.exe -X utf8 -I -B .\test\test_standalone.py
-
-# 拖放、模式切换、任务成功/失败、真实波形、播放定位与滑杆交互
-.\even\python.exe -X utf8 -I -B .\test\test_ui_workflow.py
-
-# 按项目内清单重新校验全部复制模型的 SHA-256
+.\even\python.exe -X utf8 -I -B -m unittest discover -s .\test -p 'test_*.py' -v
+.\even\python.exe -X utf8 -I -B .\test\test_inference.py --all-modes --multilingual --duration-check
 .\even\python.exe -X utf8 -I -B .\test\test_model_integrity.py
-
-# 使用随项目保留的参考音频，执行四种模式的真实离线合成
-.\even\python.exe -X utf8 -I -B .\test\test_inference.py --all-modes
+.\even\python.exe -X utf8 -I -B .\test\test_desktop_launch.py
+.\even\python.exe -X utf8 -I -B .\tools\build_release.py --lightweight
+.\even\python.exe -X utf8 -I -B .\test\test_release_package.py --lightweight --extract-smoke
 ```
 
-本次真实验收记录见 `inference_verification.json`，四段音频在 `outputs/独立项目验收_模式0.wav` 至 `outputs/独立项目验收_模式3.wav`。这组数据验证可执行性、模型复用和音频文件有效性。
+具体结果见 `upgrade_v25_verification.json`、`inference_verification.json`、`desktop_verification.json` 和构建目录的 `verification.json`。自动音频检查验证采样、时长和非静音等工程指标，不代替各语言母语听审。
 
-当前 `even/` 已准备好，正常使用无需安装依赖。若后续自行修复依赖，可运行：
-
-```powershell
-.\even\python.exe -m pip install -r .\requirements.txt
-```
-
-清单默认使用清华 PyPI 镜像，CUDA 12.9 版 PyTorch 通过官方补充源提供。保留的 `vendor/LICENSE`、`vendor/LICENSE_ZH.txt`、`vendor/DISCLAIMER` 及模型目录内许可证属于原项目资料。
-
-## 故障定位
-
-启动或生成失败时先查看 `logs/indextts.log`。模型缺失提示会列出项目相对路径；请恢复对应文件。程序不会回退到原助手的模型目录或自动读取原助手的配置。
-
-启动器已经采用 UTF-8 编码和 Windows CRLF 换行；编辑 `run.bat` 后应保留这两项设置。
+官方来源与固定提交见 `upstream_v25.json`；本地模型的来源修订、大小和 SHA-256 见 `model_manifest.json`。第三方许可保留在 `vendor/` 和模型原始许可证中。

@@ -44,6 +44,8 @@ try {
     $managementMarker = Join-Path $targetRoot 'Lib\EXTERNALLY-MANAGED'
     if (Test-Path -LiteralPath $managementMarker) { Remove-Item -LiteralPath $managementMarker -Force }
     if ($PythonOnly) { Write-Host '项目内 Python 安装与独立运行检查通过。'; exit 0 }
+    # 升级旧 even/ 时也必须先留下待完成标记；中断后不能误判为可用环境。
+    [IO.File]::WriteAllText($pending, 'Dependency installation is pending.', [Text.UTF8Encoding]::new($false))
     Write-Host '[2/3] 安装语音合成依赖到 even/。CUDA 依赖较大，首次安装需要联网。'
     $installed = $false
     # 普通依赖优先清华镜像，失败后切换阿里云；CUDA wheel 使用 requirements 中的 PyTorch 源。
@@ -60,8 +62,11 @@ try {
     Write-Host '[3/3] 检查依赖完整性。'
     & $python -X utf8 -I -B -m pip check
     if ($LASTEXITCODE -ne 0) { throw '依赖完整性检查未通过。' }
+    # 版本标记让已有 even/ 的用户同样补齐台语适配器和本地翻译依赖。
+    # findstr /x 要求完整行；写入换行，避免每次启动都误判为需要升级。
+    [IO.File]::WriteAllText((Join-Path $targetRoot '.indextts_environment_version'), ('1.4.0' + [Environment]::NewLine), [Text.UTF8Encoding]::new($false))
     if (Test-Path -LiteralPath $pending) { Remove-Item -LiteralPath $pending -Force }
-    Write-Host '项目内环境安装完成。模型需要另行放入 models/IndexTTS-2/。'
+    Write-Host '项目内环境安装完成。模型需要另行放入 models/IndexTTS-2.5/。'
     exit 0
 } catch {
     Write-Error $_

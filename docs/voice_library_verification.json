@@ -1,0 +1,105 @@
+{
+  "verified_at": "2026-11-05T07:23:06.891906+08:00",
+  "feature": "project-local reference-audio voice library",
+  "storage": "models/voice_library",
+  "runtime": "even/python.exe",
+  "tests": [
+    {
+      "name": "voice_library",
+      "passed": 29,
+      "failed": 0,
+      "log": "logs/voice_library_regression.log"
+    },
+    {
+      "name": "original_ui",
+      "passed": 7,
+      "failed": 0,
+      "log": "logs/voice_library_ui_compat.log"
+    },
+    {
+      "name": "minnan_ui",
+      "passed": 14,
+      "failed": 0,
+      "log": "logs/voice_library_minnan_compat.log"
+    }
+  ],
+  "tests_passed": 50,
+  "environment_model_check": {
+    "passed": true,
+    "app_version": "1.4.0",
+    "model_version": "2.5",
+    "model_files_checked": 14,
+    "cuda_available": true
+  },
+  "native_synthesis": {
+    "qt_platform": "windows",
+    "source_sha256": "652094f5c5db772c29f9a1648c468158d17c65ba34ed83d2cf2e6052032bc8c3",
+    "copy_sha256": "652094f5c5db772c29f9a1648c468158d17c65ba34ed83d2cf2e6052032bc8c3",
+    "saved_count": 2,
+    "restart_restored": true,
+    "real_synthesis": true,
+    "phase": "complete",
+    "screenshots": [
+      "docs/voice_library_compact.png",
+      "docs/voice_library_desktop.png"
+    ],
+    "controls_locked_during_synthesis": true,
+    "audio": "outputs/tts_20261105_071911_656773_9b5659.wav",
+    "audio_seconds": 4.992290249433107,
+    "audio_sha256": "2de9b7bebcdf9b72eeb1409e113282910c41f07ac7a37f6948e89ba1fab6bb18",
+    "controls_restored": true,
+    "delete_confirmation_passed": true,
+    "original_preserved": true,
+    "selected_reference_cleared": true,
+    "remaining_count": 1,
+    "elapsed_seconds": 81.77,
+    "temporary_library_cleaned": true
+  },
+  "final_native_layout": {
+    "qt_platform": "windows",
+    "source_sha256": "652094f5c5db772c29f9a1648c468158d17c65ba34ed83d2cf2e6052032bc8c3",
+    "copy_sha256": "652094f5c5db772c29f9a1648c468158d17c65ba34ed83d2cf2e6052032bc8c3",
+    "saved_count": 2,
+    "restart_restored": true,
+    "real_synthesis": false,
+    "phase": "complete",
+    "screenshots": [
+      "docs/voice_library_compact.png",
+      "docs/voice_library_desktop.png"
+    ],
+    "delete_confirmation_passed": true,
+    "original_preserved": true,
+    "selected_reference_cleared": true,
+    "remaining_count": 1,
+    "elapsed_seconds": 0.83,
+    "temporary_library_cleaned": true
+  },
+  "package_whitelist": {
+    "files": 109,
+    "root_files": [
+      "requirements.txt",
+      "run.bat",
+      "start.py"
+    ],
+    "voice_modules_included": true,
+    "personal_audio_included": false,
+    "models_or_credentials_included": false
+  },
+  "temporary_libraries_cleaned": true,
+  "source_sha256": {
+    "app/voice_library.py": "54ca16d108dda112f1c90426ba99a174163fa272238d27bb82aa7184fcbb3571",
+    "app/voice_panel.py": "cd4a42de3826eddec1c8f6161a80fdac45df5456d14df2639c795bdd95b8ee3e",
+    "app/window.py": "76861e0a8ccc4ea065254d832c2c0b8d125d08c5fb331a67ff1a08517a4a16f3",
+    "app/paths.py": "17d78569780f1d20976c016274e1a0463beb23316257babdd8b959cc9a4a9584",
+    "app/widgets.py": "fff91d4260329a11bd7ac5722e2e9281c4262ca5b21d0fbec86f10b0fdf966ff",
+    "app/theme.py": "9ca68050bdc0b72d652ad8124e2b8765821a4db17b34fb7a5a37721983b792e6",
+    "test/test_voice_library.py": "16317a84b320b1dedf8d83bb083d94803b11878739094f4324d2d7a33c51884b",
+    "test/test_voice_library_ui.py": "7521dffc75e8d493c58e9b4ce5b4c1e2cfd4c44a0989aadd6e9ea63c47e74e0e",
+    "test/test_voice_library_desktop.py": "cb42701a4bc7e057e427ed4e08f4ed85de6078a67672a0b5a4396f8a78ebf09b",
+    "test/test_ui_workflow.py": "2688e7aacf62f8d6d58c6a722e11382bfbf672a9ba9d34ff5467b3ca7caf7594",
+    "docs/README.md": "d536b18ace6e65926b31c6edeb0101eb644a0e07bee1f461bd10c02e2f31a2dd",
+    "docs/TODO.md": "0ac972c478e6dfbbb19448044e1a02692dc1157fb78824ff38d00f730ed67cb7",
+    "docs/voice_library_desktop.png": "0074ee677cc34b446a9a883302282c87da3238c34f13b9a3cbd1c0c1c5b04dc0",
+    "docs/voice_library_compact.png": "cf8077ae905624b18c56e6de176109efca7f7e67834edccf56acd74b50bebfc9"
+  }
+}

@@ -20,13 +20,13 @@ def main():
         """分帧检查真实窗口的空、完成和向量三种状态，等待布局与媒体初始化。"""
         app = QApplication.instance()
         for widget in app.topLevelWidgets():
-            if widget.isVisible() and widget.windowTitle() == "IndexTTS 语音合成":
+            if widget.isVisible() and widget.windowTitle() == "IndexTTS 2.5 语音合成":
                 result["visible"] = True
                 result["screenshot_saved"] = widget.grab().save("docs/desktop_window.png")
                 widget.auto_play.setChecked(False)
-                widget.text_input.setPlainText("你好，这是独立项目的语音合成测试。")
+                widget.text_input.setPlainText("欢迎来到语音工作台。\n银<行|HANG2>，让每个字读得更准确。")
                 widget.speaker_audio_input.setText("test/fixtures/reference.wav")
-                widget.play_generated_audio("outputs/独立项目验收_模式0.wav")
+                widget.play_generated_audio("outputs/2.5验收_情感模式0.wav")
                 widget.update_status("语音已生成", "done")
                 widget.status_hint.setText("音频已保存。可以继续调整文本，或试听当前结果。")
 

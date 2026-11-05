@@ -84,10 +84,10 @@ class UIWorkflowTests(unittest.TestCase):
         self.assertIn("情感参考", self.window.status_label.text())
 
     def test_successful_background_task_updates_real_preview(self):
-        """真实工作线程调用轻量引擎替身，输出使用磁盘上的真实验收 WAV。"""
+        """真实工作线程调用轻量替身，播放器使用随项目保存的真实 WAV，避免依赖历史输出。"""
         engine = Mock()
         engine.is_loaded = True
-        engine.infer.return_value = "outputs/独立项目验收_模式0.wav"
+        engine.infer.return_value = "test/fixtures/reference.wav"
         self.window.engine = engine
         self.window.text_input.setPlainText("你好，这是工作台测试。")
         self.window.speaker_audio_input.setText("test/fixtures/reference.wav")
