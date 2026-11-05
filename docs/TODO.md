@@ -1,5 +1,11 @@
 # IndexTTS 独立化待办
 
+## 发布 release.zip 到 GitHub Release（2026-11-05）
+
+- [x] 确认指定附件为 ../release.zip，1.4.0 轻量包；远端尚无 v1.4.0 标签或 Release。
+- [x] 按构建提交 1464716 创建 v1.4.0，上传用户指定的 release.zip 并正式发布；Release id=434631723，附件保持原文件名。
+- [x] 远端附件 27,229,611 字节与本地 SHA-256 一致；Latest 状态和匿名下载 HTTP 206／ZIP 文件头通过，发布记录保存在 docs/release_publish.json。
+
 ## 项目清理、仓库更新与三份分发包（2026-11-05）
 
 - [x] 核对磁盘、当前模型和环境，确认远端仓库身份及 main 分支。
